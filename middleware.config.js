@@ -36,13 +36,13 @@ module.exports = {
           sameSite: process.env.VSF_COOKIE_SAME_SITE || 'lax',
           path: process.env.VSF_COOKIE_PATH || '/',
         },
-        defaultStore: 'default',
+        defaultStore: 'et',
         externalCheckout: {
           enable: isCheckoutEnabled,
           cmsUrl: process.env.VSF_MAGENTO_EXTERNAL_CHECKOUT_URL,
           syncUrlPath: process.env.VSF_MAGENTO_EXTERNAL_CHECKOUT_SYNC_PATH,
           stores: {
-            default: isCheckoutEnabled,
+            et: isCheckoutEnabled,
           },
         },
         customApolloHttpLinkOptions: {
