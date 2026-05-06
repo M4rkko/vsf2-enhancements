@@ -29,8 +29,6 @@ export function useProductGallery(product: Ref<Product>, imgPlaceholder = ''): U
   };
 }
 
-
-
 /**
 export function useProductGallery(
   product: Ref<Product>,
