@@ -4,43 +4,39 @@
       v-if="isShowCms"
       :content="cmsContent"
     />
+
     <CategoryBreadcrumbs />
-    <SkeletonLoader
-      v-if="!activeCategoryName"
-      height="57px"
-      width="200px"
-      margin="0"
-    />
-    <SfHeading
-      v-else
-      :level="2"
-      :title="activeCategoryName"
-      class="category-title"
-    />
+
     <div class="category-layout">
       <div class="sidebar column">
-        <CategoryFilters
-          v-if="isShowProducts"
-          class="mobile-only"
-          :is-visible="isFilterSidebarOpen"
-          :cat-uid="routeData.uid"
+        <CategoryDiscoverySidebar
+          v-if="shouldShowCatalog && categoryUid"
+          :active-category="activeCategory"
+          :cat-uid="categoryUid"
+          :current-path="route.path"
+          :filter-mode="categoryFilterMode"
+          :is-filter-sidebar-open="isFilterSidebarOpen"
           @close="toggleFilterSidebar"
           @reloadProducts="onReloadProducts"
         />
       </div>
+
       <div
         ref="productContainerElement"
         class="main section column"
       >
         <CategoryNavbar
-          v-if="isShowProducts"
+          v-if="shouldShowCatalog"
           :sort-by="sortBy"
           :pagination="pagination"
           :is-loading="$fetchState.pending"
           @reloadProducts="onReloadProducts"
         />
+
         <div class="products">
-          <CategoryEmptyResults v-if="products.length === 0 && !$fetchState.pending && isShowProducts" />
+          <CategoryEmptyResults
+            v-if="products.length === 0 && !$fetchState.pending && shouldShowCatalog"
+          />
 
           <CategoryProductGrid
             v-if="isCategoryGridView"
@@ -59,6 +55,7 @@
             @click:wishlist="addItemToWishlist"
             @click:add-to-cart="addItemToCart"
           />
+
           <div
             v-if="!$fetchState.pending"
             class="products__display-opt"
@@ -78,9 +75,10 @@
               v-show="pagination.totalPages > 1"
               class="products__show-on-page"
             >
-              <span class="products__show-on-page__label">{{
-                $t('Show')
-              }}</span>
+              <span class="products__show-on-page__label">
+                {{ $t('Show') }}
+              </span>
+
               <LazyHydrate when-visible>
                 <SfSelect
                   :value="pagination.itemsPerPage.toString()"
@@ -91,7 +89,6 @@
                     v-for="option in pagination.pageOptions"
                     :key="option"
                     :value="option"
-                    class="products__items-per-page__option"
                   >
                     {{ option }}
                   </SfSelectOption>
@@ -106,11 +103,6 @@
 </template>
 
 <script lang="ts">
-import LazyHydrate from 'vue-lazy-hydration';
-import {
-  SfSelect,
-  SfHeading,
-} from '@storefront-ui/vue';
 import {
   computed,
   defineComponent,
@@ -118,11 +110,16 @@ import {
   ref,
   ssrRef,
   useFetch,
+  useRoute,
 } from '@nuxtjs/composition-api';
+import LazyHydrate from 'vue-lazy-hydration';
+import { SfSelect } from '@storefront-ui/vue';
+
 import { CacheTagPrefix, useCache } from '@vue-storefront/cache';
+
 import { usePageStore } from '~/stores/page';
-import SkeletonLoader from '~/components/SkeletonLoader/index.vue';
 import CategoryPagination from '~/modules/catalog/category/components/pagination/CategoryPagination.vue';
+
 import {
   useCategory,
   useFacet,
@@ -132,6 +129,7 @@ import {
 
 import { useAddToCart } from '~/helpers/cart/addToCart';
 import { useWishlist } from '~/modules/wishlist/composables/useWishlist';
+
 import { usePrice } from '~/modules/catalog/pricing/usePrice';
 import { useCategoryContent } from '~/modules/catalog/category/components/cms/useCategoryContent';
 import { useTraverseCategory } from '~/modules/catalog/category/helpers/useTraverseCategory';
@@ -140,6 +138,7 @@ import { getMetaInfo } from '~/helpers/getMetaInfo';
 
 import CategoryNavbar from '~/modules/catalog/category/components/navbar/CategoryNavbar.vue';
 import CategoryBreadcrumbs from '~/modules/catalog/category/components/breadcrumbs/CategoryBreadcrumbs.vue';
+import CategoryDiscoverySidebar from '~/components/catalog/CategoryDiscoverySidebar.vue';
 
 import type { ProductInterface } from '~/modules/GraphQL/types';
 import type { SortingModel } from '~/modules/catalog/category/composables/useFacet/sortingOptions';
@@ -148,10 +147,11 @@ import type { Product } from '~/modules/catalog/product/types';
 
 export default defineComponent({
   name: 'CategoryPage',
+
   components: {
     CategoryPagination,
+    CategoryDiscoverySidebar,
     CategoryEmptyResults: () => import('~/modules/catalog/category/components/CategoryEmptyResults.vue'),
-    CategoryFilters: () => import('~/modules/catalog/category/components/filters/CategoryFilters.vue'),
     CmsContent: () => import('~/modules/catalog/category/components/cms/CmsContent.vue'),
     CategoryProductGrid: () => import('~/modules/catalog/category/components/views/CategoryProductGrid.vue'),
     CategoryProductList: () => import('~/modules/catalog/category/components/views/CategoryProductList.vue'),
@@ -159,24 +159,27 @@ export default defineComponent({
     CategoryBreadcrumbs,
     SfSelect,
     LazyHydrate,
-    SfHeading,
-    SkeletonLoader,
   },
+
   transition: 'fade',
+
   setup() {
     const { routeData } = usePageStore();
+    const route = useRoute();
     const { getContentData } = useCategoryContent();
     const { loadCategoryMeta } = useCategory();
     const { addTags } = useCache();
     const uiHelpers = useUiHelpers();
+
     const cmsContent = ref('');
     const isShowCms = ref(false);
     const isShowProducts = ref(false);
     const products = ssrRef<ProductInterface[]>([]);
     const sortBy = ref<SortingModel>({ selected: '', options: [] });
     const pagination = ref<Pagination>({});
-
     const productContainerElement = ref<HTMLElement | null>(null);
+    const categoryMeta = ref(null);
+    const isPriceLoaded = ref(false);
 
     const {
       toggleFilterSidebar,
@@ -185,37 +188,65 @@ export default defineComponent({
       isCategoryGridView,
       isFilterSidebarOpen,
     } = useUiState();
+
     const {
       load: loadWishlist,
       addItem: addItemToWishlistBase,
       isInWishlist,
       removeItem: removeItemFromWishlist,
     } = useWishlist();
+
     const { result, search } = useFacet();
     const { addItemToCart } = useAddToCart();
-
-    const categoryMeta = ref(null);
-
-    const addItemToWishlist = async (product: Product) => {
-      await (isInWishlist({ product })
-        ? removeItemFromWishlist({ product })
-        : addItemToWishlistBase({ product }));
-    };
-
     const { activeCategory, loadCategoryTree } = useTraverseCategory();
+
     const activeCategoryName = computed(() => activeCategory.value?.name ?? '');
 
-    const categoryUid = routeData.uid;
+    const categoryUid = computed<string>(() => String(
+      routeData.value?.uid ?? routeData.uid ?? '',
+    ));
+
+    const categoryDepth = computed(() => {
+      const pathWithoutLocale = route.value.path
+        .replace(/^\/[a-z]{2}(?=\/)/, '')
+        .replace(/^\/[a-z]{2}$/, '/');
+
+      return pathWithoutLocale
+        .split('/')
+        .filter(Boolean)
+        .length;
+    });
+
+    const categoryFilterMode = computed(() => (
+      categoryDepth.value <= 1 ? 'general' : 'full'
+    ));
+
+    const shouldShowCatalog = computed(() => (
+      isShowProducts.value || products.value.length > 0
+    ));
+
+    const addItemToWishlist = async (product: Product) => {
+      await (
+        isInWishlist({ product })
+          ? removeItemFromWishlist({ product })
+          : addItemToWishlistBase({ product })
+      );
+    };
 
     const { fetch } = useFetch(async () => {
       if (!activeCategory.value) {
         await loadCategoryTree();
       }
 
+      const uid = categoryUid.value;
+
       const [content, categoryMetaData] = await Promise.all([
-        getContentData(categoryUid as string),
-        loadCategoryMeta({ category_uid: routeData.value?.uid }),
-        search({ ...uiHelpers.getFacetsFromURL(), category_uid: categoryUid }),
+        getContentData(uid),
+        loadCategoryMeta({ category_uid: uid }),
+        search({
+          ...uiHelpers.getFacetsFromURL(),
+          category_uid: uid,
+        }),
       ]);
 
       categoryMeta.value = categoryMetaData;
@@ -227,7 +258,8 @@ export default defineComponent({
       sortBy.value = facetGetters.getSortOptions(result.value);
       pagination.value = facetGetters.getPagination(result.value);
 
-      const tags = [{ prefix: CacheTagPrefix.View, value: routeData.uid }];
+      const tags = [{ prefix: CacheTagPrefix.View, value: uid }];
+
       const productTags = products.value.map((product) => ({
         prefix: CacheTagPrefix.Product,
         value: product.uid,
@@ -236,16 +268,25 @@ export default defineComponent({
       addTags([...tags, ...productTags]);
     });
 
-    const isPriceLoaded = ref(false);
-
     onMounted(async () => {
       loadWishlist();
+
       const { getPricesBySku } = usePrice();
+
       if (products.value.length > 0) {
-        const skus = products.value.map((item) => item.sku);
-        const priceData = await getPricesBySku(skus, pagination.value.itemsPerPage);
+        const skus = products.value
+          .map((item) => item.sku)
+          .filter(Boolean);
+
+        const priceData = await getPricesBySku(
+          skus,
+          pagination.value.itemsPerPage,
+        );
+
         products.value = products.value.map((product) => {
-          const priceRange = priceData.items.find((item) => item.sku === product.sku)?.price_range;
+          const priceRange = priceData.items.find(
+            (item) => item.sku === product.sku,
+          )?.price_range;
 
           if (priceRange) {
             return {
@@ -273,7 +314,10 @@ export default defineComponent({
 
     const onReloadProducts = () => {
       goToPage(0);
-      productContainerElement.value.scrollIntoView();
+
+      if (productContainerElement.value) {
+        productContainerElement.value.scrollIntoView();
+      }
     };
 
     return {
@@ -292,15 +336,21 @@ export default defineComponent({
       isShowCms,
       isShowProducts,
       cmsContent,
+      activeCategory,
       activeCategoryName,
+      categoryUid,
+      categoryFilterMode,
       routeData,
       doChangeItemsPerPage,
       productContainerElement,
       categoryMeta,
       onReloadProducts,
       goToPage,
+      shouldShowCatalog,
+      route,
     };
   },
+
   head() {
     return getMetaInfo(this.categoryMeta);
   },
@@ -316,6 +366,7 @@ export default defineComponent({
     margin: 0 auto;
   }
 }
+
 .category-layout {
   display: flex;
   flex-direction: row;
@@ -327,56 +378,38 @@ export default defineComponent({
 
   .column {
     display: flex;
-    flex-direction: column;
     flex: 1;
+    flex-direction: column;
 
     @include for-mobile {
       flex: auto;
     }
 
     &.sidebar {
-      max-width: 20%;
-    }
-  }
-}
-
-.main {
-  &.section {
-    padding: 0;
-
-    @include for-mobile {
-      $padding: var(--spacer-xs);
-      padding: $padding;
-      width: calc(100% - 2 * $padding);
+      max-width: 22%;
     }
   }
 }
 
 .main {
   display: flex;
-}
 
-.category-title  {
-  margin-left: var(--spacer-sm);
-  text-align: left;
+  &.section {
+    padding: 0;
+
+    @include for-mobile {
+      $padding: var(--spacer-xs);
+
+      width: calc(100% - 2 * $padding);
+      padding: $padding;
+    }
+  }
 }
 
 .sidebar {
-  flex: 0 0 15%;
-  padding: 0 0 0 var(--spacer-sm);
-  border: 1px solid var(--c-light);
-  border-width: 0 1px 0 0;
-}
-
-.sidebar-filters {
-  --overlay-z-index: 3;
-  --sidebar-title-display: none;
-  --sidebar-top-padding: 0;
-
-  @include for-desktop {
-    --sidebar-content-padding: 0 var(--spacer-xl);
-    --sidebar-bottom-padding: 0 var(--spacer-xl);
-  }
+  flex: 0 0 22%;
+  padding: 0 var(--spacer-sm);
+  border-right: 1px solid var(--theme-border);
 }
 
 .products {
@@ -395,8 +428,8 @@ export default defineComponent({
   @include for-mobile {
     &__display-opt {
       display: flex;
-      justify-content: space-around;
       align-items: center;
+      justify-content: space-around;
     }
 
     &__show-on-page {
@@ -406,8 +439,8 @@ export default defineComponent({
 
   &__show-on-page {
     display: flex;
-    justify-content: flex-end;
     align-items: baseline;
+    justify-content: flex-end;
 
     &__label {
       font-family: var(--font-family--secondary);
