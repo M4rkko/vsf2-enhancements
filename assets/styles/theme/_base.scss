@@ -1,0 +1,43 @@
+html,
+body {
+  background: var(--theme-bg);
+  color: var(--theme-text);
+}
+
+body {
+  transition:
+    background-color var(--theme-transition),
+    color var(--theme-transition);
+}
+
+a {
+  color: var(--theme-primary);
+  transition: color var(--theme-transition);
+}
+
+a:hover {
+  color: var(--theme-primary-hover);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--theme-text-strong);
+}
+
+p {
+  color: var(--theme-text);
+}
+
+small,
+label {
+  color: var(--theme-text-soft);
+}
+
+::selection {
+  background: var(--theme-primary);
+  color: var(--theme-text-inverted);
+}

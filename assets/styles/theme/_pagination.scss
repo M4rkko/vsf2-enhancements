@@ -1,0 +1,104 @@
+.products__pagination,
+.sf-pagination {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 2.5rem 0 0;
+  color: var(--theme-text-muted) !important;
+  background: transparent !important;
+}
+
+.sf-pagination__item,
+.sf-pagination__item button,
+.sf-pagination__item a,
+.sf-pagination__item span {
+  color: var(--theme-text-muted) !important;
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  box-shadow: none !important;
+  font-weight: 600;
+}
+
+.sf-pagination__item.current,
+.sf-pagination__item--current,
+.sf-pagination__item.is-active,
+.sf-pagination__item.current span,
+.sf-pagination__item--current span,
+.sf-pagination__item.is-active span {
+  color: var(--theme-text-strong) !important;
+  background: transparent !important;
+  border-color: transparent !important;
+  font-weight: 800;
+}
+
+.sf-pagination__item.prev button,
+.sf-pagination__item.next button,
+.sf-pagination__item.prev a,
+.sf-pagination__item.next a {
+  color: var(--theme-text-strong) !important;
+  background: transparent !important;
+  border-color: transparent !important;
+}
+
+.sf-pagination__item.prev button:hover,
+.sf-pagination__item.next button:hover,
+.sf-pagination__item.prev a:hover,
+.sf-pagination__item.next a:hover {
+  color: var(--theme-primary) !important;
+  background: var(--theme-primary-soft) !important;
+  border-color: var(--theme-primary) !important;
+}
+
+.sf-pagination__item.prev button:disabled,
+.sf-pagination__item.next button:disabled,
+.sf-pagination__item.prev button[disabled],
+.sf-pagination__item.next button[disabled],
+.sf-pagination__item.prev button[aria-disabled='true'],
+.sf-pagination__item.next button[aria-disabled='true'],
+.sf-pagination__item.prev.is-disabled button,
+.sf-pagination__item.next.is-disabled button {
+  color: var(--theme-bg) !important;
+  background: var(--theme-bg) !important;
+  border-color: var(--theme-bg) !important;
+  box-shadow: none !important;
+  opacity: 0.2;
+  cursor: not-allowed;
+}
+
+.sf-pagination__item.prev button .sf-icon,
+.sf-pagination__item.next button .sf-icon,
+.sf-pagination__item.prev button svg,
+.sf-pagination__item.next button svg {
+  color: currentColor !important;
+  fill: currentColor !important;
+}
+
+.sf-pagination__item.prev button:disabled .sf-icon,
+.sf-pagination__item.next button:disabled .sf-icon,
+.sf-pagination__item.prev button[aria-disabled='true'] .sf-icon,
+.sf-pagination__item.next button[aria-disabled='true'] .sf-icon,
+.sf-pagination__item.prev button:disabled svg,
+.sf-pagination__item.next button:disabled svg,
+.sf-pagination__item.prev button[aria-disabled='true'] svg,
+.sf-pagination__item.next button[aria-disabled='true'] svg {
+  color: var(--theme-bg) !important;
+  fill: var(--theme-bg) !important;
+}
+
+.products__pagination .sf-button--pure,
+.sf-pagination .sf-button--pure {
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  color: inherit !important;
+}
+
+.products__pagination .sf-button--pure:disabled,
+.products__pagination .sf-button--pure[aria-disabled='true'],
+.sf-pagination .sf-button--pure:disabled,
+.sf-pagination .sf-button--pure[aria-disabled='true'] {
+  background: var(--theme-bg) !important;
+  border-color: var(--theme-bg) !important;
+  color: var(--theme-bg) !important;
+  opacity: 0.2;
+}

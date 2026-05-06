@@ -26,9 +26,20 @@ export default async () => {
   const baseConfig = {
     ssr: true,
     dev: process.env.VSF_NUXT_APP_ENV !== 'production',
+    css: [
+      '~/assets/styles/theme/index.scss',
+    ],
     publicRuntimeConfig: {
       middlewareUrl: process.env.API_BASE_URL || 'http://localhost:8181',
-      ssrMiddlewareUrl: process.env.API_SSR_BASE_URL || 'http://localhost:8181'
+      ssrMiddlewareUrl: process.env.API_SSR_BASE_URL || 'http://localhost:8181',
+      theme: {
+        default: process.env.VSF_THEME_DEFAULT || 'default',
+        showToggle: process.env.VSF_THEME_TOGGLE !== 'false',
+        available: (process.env.VSF_THEME_AVAILABLE || 'default,fire,ice')
+          .split(',')
+          .map((theme) => theme.trim())
+          .filter(Boolean),
+      },
     },
     server: {
       port: process.env.VSF_NUXT_APP_PORT,
@@ -141,38 +152,25 @@ export default async () => {
       }],
     ],
     i18n: {
-      country: 'US',
+      country: 'EE',
       baseUrl: process.env.VSF_STORE_URL,
       strategy: 'prefix',
       locales: [
         {
-          code: 'default',
-          file: 'en.js',
-          iso: 'en_US',
-          defaultCurrency: 'USD',
-        },
-        {
-          code: 'german',
-          file: 'de.js',
-          iso: 'de_DE',
+          code: 'et',
+          file: 'et.js',
+          iso: 'et_EE',
           defaultCurrency: 'EUR',
         },
       ],
-      defaultLocale: 'default',
+      defaultLocale: 'et',
       lazy: true,
       seo: true,
       langDir: 'lang/',
       vueI18n: {
-        fallbackLocale: 'default',
+        fallbackLocale: 'et',
         numberFormats: {
-          default: {
-            currency: {
-              style: 'currency',
-              currency: 'USD',
-              currencyDisplay: 'symbol',
-            },
-          },
-          german: {
+          et: {
             currency: {
               style: 'currency',
               currency: 'EUR',
@@ -214,6 +212,7 @@ export default async () => {
       ],
     },
     plugins: [
+      '~/plugins/theme.client',
       '~/plugins/token-expired',
       '~/plugins/i18n',
       '~/plugins/fcPlugin',

@@ -1,0 +1,81 @@
+.sf-input,
+.sf-select,
+.sf-textarea {
+  color: var(--theme-text);
+}
+
+.sf-input input,
+.sf-select select,
+.sf-textarea textarea,
+input,
+select,
+textarea {
+  background: var(--theme-input-bg);
+  color: var(--theme-text);
+  border-color: var(--theme-input-border);
+}
+
+.sf-input input::placeholder,
+.sf-textarea textarea::placeholder,
+input::placeholder,
+textarea::placeholder {
+  color: var(--theme-text-muted);
+}
+
+.sf-input input:focus,
+.sf-select select:focus,
+.sf-textarea textarea:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--theme-input-focus);
+  outline-color: var(--theme-input-focus);
+}
+
+.sf-input__label,
+.sf-select__label,
+.sf-textarea__label,
+.sf-checkbox__label,
+.sf-radio__label {
+  color: var(--theme-text-soft);
+}
+
+.sf-checkbox__checkmark,
+.sf-radio__checkmark {
+  border-color: var(--theme-border-strong);
+}
+
+.sf-checkbox input:checked + .sf-checkbox__checkmark,
+.sf-radio input:checked + .sf-radio__checkmark {
+  background: var(--theme-primary);
+  border-color: var(--theme-primary);
+}
+
+select,
+.sf-select__dropdown,
+.sf-select select,
+.navbar select,
+.home-catalog__navbar select {
+  background-color: var(--theme-input-bg) !important;
+  color: var(--theme-text) !important;
+  border-color: var(--theme-input-border) !important;
+}
+
+select option,
+.sf-select__dropdown option,
+.sf-select select option,
+.navbar select option,
+.home-catalog__navbar select option {
+  background-color: var(--theme-input-bg) !important;
+  color: var(--theme-text) !important;
+}
+
+select:focus,
+.sf-select__dropdown:focus,
+.sf-select select:focus,
+.navbar select:focus,
+.home-catalog__navbar select:focus {
+  outline: 1px solid var(--theme-primary);
+  background-color: var(--theme-input-bg) !important;
+  color: var(--theme-text) !important;
+}

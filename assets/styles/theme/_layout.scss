@@ -1,0 +1,47 @@
+#__nuxt,
+#__layout,
+.layout,
+.sf-main,
+main {
+  background: var(--theme-bg);
+  color: var(--theme-text);
+}
+
+.sf-section,
+.sf-call-to-action,
+.sf-hero,
+.sf-banner,
+.sf-card,
+.sf-sidebar,
+.sf-footer {
+  color: var(--theme-text);
+}
+
+.sf-heading,
+.sf-heading__title,
+.sf-heading__subtitle {
+  color: var(--theme-text-strong);
+}
+
+.sf-heading__subtitle {
+  color: var(--theme-text-soft);
+}
+
+.sf-footer {
+  background: var(--theme-footer-bg);
+  border-top: 2px solid var(--theme-primary);
+}
+
+.sf-footer,
+.sf-footer a,
+.sf-footer p,
+.sf-footer span {
+  color: var(--theme-text-soft);
+}
+
+.sf-footer h1,
+.sf-footer h2,
+.sf-footer h3,
+.sf-footer h4 {
+  color: var(--theme-text-strong);
+}

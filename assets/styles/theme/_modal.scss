@@ -1,0 +1,46 @@
+.sf-modal,
+.sf-modal__container,
+.sf-modal__content {
+  background: var(--theme-surface);
+  color: var(--theme-text);
+}
+
+.sf-modal__bar,
+.sf-modal__header {
+  background: var(--theme-surface-strong);
+  color: var(--theme-text-strong);
+  border-color: var(--theme-border);
+}
+
+.sf-modal__close {
+  color: var(--theme-text-soft);
+}
+
+.sf-modal__close:hover {
+  color: var(--theme-text-strong);
+}
+
+.sf-modal h1,
+.sf-modal h2,
+.sf-modal h3,
+.sf-modal h4 {
+  color: var(--theme-text-strong);
+}
+
+.sf-modal p,
+.sf-modal span,
+.sf-modal label {
+  color: var(--theme-text);
+}
+
+.sf-modal input,
+.sf-modal textarea,
+.sf-modal select {
+  background: var(--theme-input-bg);
+  color: var(--theme-text);
+  border-color: var(--theme-input-border);
+}
+
+.sf-modal a {
+  color: var(--theme-primary);
+}

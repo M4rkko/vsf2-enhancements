@@ -1,0 +1,38 @@
+html.theme-ice {
+
+  --theme-bg: #06111f;
+  --theme-surface: #0b1d33;
+  --theme-surface-strong: #102842;
+  --theme-surface-hover: #17385a;
+
+  --theme-text-strong: #eef8ff;
+  --theme-text: #bfe7ff;
+  --theme-text-soft: #88cbff;
+  --theme-text-muted: #4f89b0;
+  --theme-text-inverted: #ffffff;
+
+
+  --theme-accent: #4db7ff;
+  --theme-primary: #4db7ff;
+  --theme-primary-hover: #8fdcff;
+  --theme-primary-soft: rgba(77, 183, 255, 0.18);
+
+  --theme-border: #23445f;
+  --theme-border-strong: #3b6d91;
+
+  --theme-card-bg: #0b1d33;
+  --theme-card-border: #2b5678;
+  --theme-card-hover: #102842;
+
+  --theme-input-bg: #081827;
+  --theme-input-border: #2d5878;
+  --theme-input-focus: #4db7ff;
+
+  --theme-header-bg: #06111f;
+  --theme-footer-bg: #06111f;
+
+  --theme-price: var(--theme-text-strong);
+  --theme-rating: #4db7ff;
+
+  --theme-shadow-soft: 0 10px 30px rgba(77, 183, 255, 0.08);
+}

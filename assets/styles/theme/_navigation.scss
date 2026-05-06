@@ -1,0 +1,36 @@
+.sf-header-navigation,
+.header-navigation,
+.navigation {
+  background: var(--theme-header-bg) !important;
+  color: var(--theme-text-soft);
+}
+
+.header-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-navigation__link {
+  color: var(--theme-text-soft) !important;
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+}
+
+.header-navigation__link:hover,
+.header-navigation__link.nuxt-link-active,
+.header-navigation__link.nuxt-link-exact-active {
+  color: var(--theme-text-strong) !important;
+  text-decoration: none;
+}
+
+.header-navigation .sf-icon,
+.header-navigation svg,
+.header-navigation__subcategories,
+.header-navigation__subcategories-inner,
+.header-navigation__subcategories-wrapper,
+.header-navigation__subcategory {
+  display: none !important;
+}

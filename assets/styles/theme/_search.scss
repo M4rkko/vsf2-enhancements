@@ -1,0 +1,48 @@
+.sf-search-bar,
+.search-bar {
+  background: var(--theme-header-bg);
+  color: var(--theme-text);
+}
+
+.sf-search-bar input,
+.search-bar input {
+  background: var(--theme-input-bg);
+  color: var(--theme-text);
+  border-color: var(--theme-input-border);
+}
+
+.sf-search-bar input::placeholder,
+.search-bar input::placeholder {
+  color: var(--theme-text-muted);
+}
+
+.search-results,
+.search-results__wrapper,
+.search-results__content,
+.sf-search-results {
+  background: var(--theme-surface);
+  color: var(--theme-text);
+  border-color: var(--theme-border);
+}
+
+.search-results__title,
+.search-results h1,
+.search-results h2,
+.search-results h3 {
+  color: var(--theme-text-strong);
+}
+
+.search-results__empty,
+.search-results__description,
+.search-results p {
+  color: var(--theme-text-soft);
+}
+
+.search-results .sf-product-card {
+  background: var(--theme-card-bg);
+  border-color: var(--theme-card-border);
+}
+
+.sf-overlay {
+  background: rgba(0, 0, 0, 0.55);
+}

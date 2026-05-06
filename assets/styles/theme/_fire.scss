@@ -1,0 +1,45 @@
+html.theme-fire {
+  /* Backgrounds */
+  --theme-bg: #050000;
+  --theme-surface: #140404;
+  --theme-surface-strong: #240909;
+  --theme-surface-hover: #351010;
+
+  /* Text hierarchy */
+  --theme-text-strong: #ff6a47;
+  --theme-text: #ff9b7e;
+  --theme-text-soft: #d96b52;
+  --theme-text-muted: #9c4333;
+  --theme-text-inverted: #ffffff;
+
+  /* Accent / actions */
+  --theme-accent: #ff3b1f;
+  --theme-primary: #ff3b1f;
+  --theme-primary-hover: #ff6a00;
+  --theme-primary-soft: rgba(255, 59, 31, 0.18);
+
+  /* Borders */
+  --theme-border: #3a1212;
+  --theme-border-strong: #7a2525;
+
+  /* Cards */
+  --theme-card-bg: #120505;
+  --theme-card-border: #4a1717;
+  --theme-card-hover: #1d0707;
+
+  /* Forms */
+  --theme-input-bg: #100404;
+  --theme-input-border: #5a1b1b;
+  --theme-input-focus: #ff5a36;
+
+  /* Layout */
+  --theme-header-bg: #080000;
+  --theme-footer-bg: #0b0101;
+
+  /* Product */
+  --theme-price: #ff6a47;
+  --theme-rating: #ff5a36;
+
+  /* Effects */
+  --theme-shadow-soft: 0 10px 30px rgba(255, 59, 31, 0.08);
+}

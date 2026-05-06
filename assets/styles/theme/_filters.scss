@@ -1,0 +1,38 @@
+.sf-sidebar,
+.sidebar-filters,
+.category-filters,
+.filters {
+  background: var(--theme-surface);
+  color: var(--theme-text);
+  border-color: var(--theme-border);
+}
+
+.sf-filter,
+.sf-accordion-item,
+.sf-accordion-item__header,
+.sf-accordion-item__content {
+  background: transparent;
+  color: var(--theme-text);
+  border-color: var(--theme-border);
+}
+
+.sf-filter__label,
+.sf-accordion-item__summary,
+.sf-checkbox__label {
+  color: var(--theme-text-soft);
+}
+
+.sf-filter__label:hover,
+.sf-checkbox__label:hover {
+  color: var(--theme-text-strong);
+}
+
+.sf-color,
+.sf-color-picker {
+  border-color: var(--theme-border);
+}
+
+.sf-color.is-active,
+.sf-color--active {
+  border-color: var(--theme-primary);
+}
